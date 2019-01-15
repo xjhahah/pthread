@@ -1,8 +1,6 @@
 #include "sem.hpp"
 
 const int num=12;
-pthread_mutex_t  lock;
-pthread_cond_t cond;
 
 void* consume_routine(void* arg)
 {
@@ -10,8 +8,9 @@ void* consume_routine(void* arg)
   int data;
   for(;;)
   {
+    usleep(1000);
     q->PopData(data);
-    cout << "consume is done, data is " << data << endl;
+    cout<<"consume has done, data is " << data << endl;
   }
 }
 void* product_routine(void* arg)
@@ -22,7 +21,7 @@ void* product_routine(void* arg)
   {
     int data=rand()%100+1;
     q->PushData(data);
-    cout << "product is done, data is " << data << endl;
+    cout << "product has done, data is " << data << endl;
    sleep(1);
   }
 }

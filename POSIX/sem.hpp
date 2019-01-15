@@ -31,11 +31,11 @@ class RingQueue
     }
   public:
     RingQueue(int _cap)
-      :cap(_cap)
-      ,ring(_cap)
+      :ring(_cap)
+      ,cap(_cap)
     {
       c_step = p_step = 0;
-     sem_init(&blank_sem,0,cap);
+     sem_init(&blank_sem,0,_cap);   //缺省为线程内共享
      sem_init(&data_sem,0,0);
     }
     void PushData(const int& data)
@@ -46,9 +46,9 @@ class RingQueue
       V(data_sem);
 
       p_step++;
-      p_step %= cap;
+      p_step %= cap;  //防止越界
     }
-    void PopData(int data)
+    void PopData(int& data)   //先申请数据在释放空格
     {
       P(data_sem);
       data = ring[c_step];
