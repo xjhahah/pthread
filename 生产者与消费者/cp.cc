@@ -1,4 +1,5 @@
 #include "cp.hpp"
+#include <stdio.h>
 
 const int num = 6;
 
@@ -10,6 +11,7 @@ void* consume_routine(void* arg)
   while(1)
   {
     bqp->PopData(data);
+    fflush(stdout);
     cout<< "Consume done , data is: "<< data << endl;
   }
 }

@@ -37,6 +37,7 @@ int main()
 {
   int num = 3;
   vector<attr> thread_list(num);
+  pthread_mutex_init(&lock,NULL);
   int i=1;
   for(;i<=thread_list.size();++i)
   {
@@ -48,5 +49,6 @@ int main()
   {
     pthread_join(thread_list[j].tid,NULL);
   }
+  pthread_mutex_destroy(&lock);
   return  0;
 }

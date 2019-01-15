@@ -62,7 +62,7 @@ class BlockQueue
       ,water_line(cap*2/3)
     {
       pthread_mutex_init(&lock,NULL);
-      pthread_cond_init(&cond_p,NULL);
+      pthread_cond_init (&cond_p,NULL);
       pthread_cond_init(&cond_c,NULL);
 
     }
@@ -70,9 +70,9 @@ class BlockQueue
     {
       //访问阻塞队列
       LockQueue();  //加锁
-      while(IsFull())
+      while(IsFull())    //推荐用while  如果等待失败就可能会造成假唤醒状态
       {
-        SignalConsume();
+        //SignalConsume(); //如果生产满了，通知消费者消费   
         ProductWait();
       }
 
@@ -84,7 +84,7 @@ class BlockQueue
       UnlockQueue();
     }
 
-    void PopData(int data)
+    void PopData(int& data)
     {
         LockQueue();
         while(IsEmpty())
