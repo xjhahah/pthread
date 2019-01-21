@@ -10,7 +10,8 @@ pthread_mutex_t lock;  //互斥锁
 
 void* BuyTickets(void* arg)
 {
-  int number=(int)arg;
+  int* id=(int*)arg;
+  int number = *id;
   while(1)
   {
     usleep(100);
@@ -24,7 +25,8 @@ void* BuyTickets(void* arg)
     }
     else{
       pthread_mutex_unlock(&lock);
-      break;
+      cout<<"tickets is full..."<<endl;
+      return (void*)0;
     }
   }
   return (void*)0;
@@ -35,19 +37,18 @@ struct attr{
 };
 int main()
 {
-  int num = 3;
+  int num = 5;
   vector<attr> thread_list(num);
   pthread_mutex_init(&lock,NULL);
-  int i=1;
-  for(;i<=thread_list.size();++i)
+
+  for(int i=0;i<num;++i)
   {
+    pthread_create(&(thread_list[i].tid),NULL,BuyTickets,(void*)&i);
     thread_list[i]._num = i;
-    pthread_create(&(thread_list[i].tid),NULL,BuyTickets,(void*)thread_list[i]._num);
   }
-  int j=1;
-  while(j++ && j<=thread_list.size())
+  for(int i=0;i<num;++i)
   {
-    pthread_join(thread_list[j].tid,NULL);
+    pthread_join(thread_list[i].tid,NULL);
   }
   pthread_mutex_destroy(&lock);
   return  0;
